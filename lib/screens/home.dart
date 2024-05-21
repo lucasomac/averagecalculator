@@ -1,6 +1,7 @@
 import 'package:averagecalculator/components/result_details.dart';
 import 'package:flutter/material.dart';
 
+import '../components/action_button.dart';
 import '../model/result_data.dart';
 
 class Home extends StatefulWidget {
@@ -11,7 +12,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final data = ResultData("", "", [0, 0, 0]);
+  var data = ResultData("", "", [0, 0, 0]);
+  var nameController = TextEditingController();
+  var emailController = TextEditingController();
+  var gradeOne = TextEditingController();
+  var gradeTwo = TextEditingController();
+  var gradeThree = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +38,12 @@ class _HomeState extends State<Home> {
               height: 16,
             ),
             TextField(
+              controller: nameController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: "Nome",
               ),
+              keyboardType: TextInputType.name,
               onChanged: (value) {
                 data.name = value;
               },
@@ -44,10 +52,12 @@ class _HomeState extends State<Home> {
               height: 10,
             ),
             TextField(
+              controller: emailController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: "eMail",
               ),
+              keyboardType: TextInputType.emailAddress,
               onChanged: (value) {
                 data.email = value;
               },
@@ -60,10 +70,12 @@ class _HomeState extends State<Home> {
               children: [
                 Expanded(
                   child: TextField(
+                    controller: gradeOne,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "Nota 1",
                     ),
+                    keyboardType: TextInputType.number,
                     onChanged: (value) {
                       data.name = value;
                     },
@@ -74,10 +86,12 @@ class _HomeState extends State<Home> {
                 ),
                 Expanded(
                   child: TextField(
+                    controller: gradeTwo,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "Nota 2",
                     ),
+                    keyboardType: TextInputType.number,
                     onChanged: (value) {
                       data.email = value;
                     },
@@ -88,10 +102,12 @@ class _HomeState extends State<Home> {
                 ),
                 Expanded(
                   child: TextField(
+                    controller: gradeThree,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "Nota 3",
                     ),
+                    keyboardType: TextInputType.number,
                     onChanged: (value) {
                       data.email = value;
                     },
@@ -99,34 +115,45 @@ class _HomeState extends State<Home> {
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 48),
-                    backgroundColor: Colors.deepPurple,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    )),
-                onPressed: _sendData,
-                child: const Text(
-                  "CALCULAR MÉDIA",
-                ),
-              ),
+            ActionButton(
+              sendData: _sendData,
+              name: "CALCULAR MÉDIA",
             ),
             ResultDetails(data: data),
-            ElevatedButton(
-              onPressed: _cleanForm,
-              child: const Text("APAGAR OS CAMPOS"),
-            )
+            ActionButton(sendData: _cleanForm, name: "APAGAR CAMPOS")
           ],
         ),
       ),
     );
   }
 
-  void _sendData() {}
+  ResultData _getResult() {
+    return ResultData(
+      nameController.text,
+      emailController.text,
+      [
+        int.parse(gradeOne.text),
+        int.parse(gradeTwo.text),
+        int.parse(gradeThree.text)
+      ],
+    );
+  }
 
-  void _cleanForm() {}
+  void _sendData() {
+    setState(() {
+      data = _getResult();
+    });
+  }
+
+  void _cleanForm() {
+    setState(() {
+      nameController.clear();
+      emailController.clear();
+      gradeOne.clear();
+      gradeTwo.clear();
+      gradeThree.clear();
+      data = ResultData("", "", [0, 0, 0]);
+      // data = _getResult();
+    });
+  }
 }

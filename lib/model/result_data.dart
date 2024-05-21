@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class ResultData {
   String name;
   String email;
@@ -20,13 +18,13 @@ class ResultData {
 
   String getFormatedGrades() {
     var formated = "";
-    for (var element in grades) {
-      if (element == grades.last) {
-        formated += element.toString();
+    grades.asMap().forEach((index, grade) {
+      if (index != grades.length - 1 && grades.length > 1) {
+        formated += "$grade - ";
       } else {
-        formated += "$element - ";
+        formated += "$grade";
       }
-    }
+    });
     return formated;
   }
 }
